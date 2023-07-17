@@ -88,3 +88,47 @@ body {
 footer {
   flex-shrink: 0;
 }
+
+
+.discount-card {
+  padding: 5px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+.trainee-card {
+  border: 2px solid #4bb7c8;
+}
+
+.junior-card {
+  border: 2px solid #ffc10a;
+}
+
+.estudiante-card {
+  border: 2px solid #a2cfff;
+}
+
+.discount-title {
+  font-size: 30px;
+}
+
+.discount-description {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.discount-documentation {
+  color: gray;
+}
+
+.discount-percentage{
+  font-size: 25px;
+}
+
+.price-field {
+  background-color: #cce5ff;
+  padding: 10px;
+  display: inline-block;
+  border-radius: 5px;
+  width: 100%;
+}
