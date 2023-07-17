@@ -30,7 +30,7 @@ function sendForm() {
 
         Swal.fire({
           icon: "success",
-          title: "Incripcion confirmada",
+          title: "Inscripción confirmada",
           text: "Nos comunicaremos contigo a la brevedad.",
           confirmButtonText: "Continuar",
           confirmButtonColor: '#0297de',
@@ -40,9 +40,9 @@ function sendForm() {
       .catch(error => {
 
         Swal.fire({
-          icon: "Error",
+          icon: "error",
           title: "Suucedio un error inesperado",
-          text: "Reintenta de nuevo ma tarde.",
+          text: "Reintente de nuevo más tarde.",
           confirmButtonText: "Cerrar",
           confirmButtonColor: '#0297de',
         });
