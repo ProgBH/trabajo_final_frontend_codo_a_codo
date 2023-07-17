@@ -29,16 +29,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function obtenerOradores() {
-        method: "GET",
-        fetch('http://localhost:8080/api/oradores/all')
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById('tableBodyOradores');
-                tableBody.innerHTML = '';
+            fetch('http://localhost:8080/api/oradores/all')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('tableBodyOradores');
+                    tableBody.innerHTML = '';
 
-                data.forEach(orador => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
+                    data.forEach(orador => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
                         <td>${orador.nombre}</td>
                         <td>${orador.apellido}</td>
                         <td>${orador.tema}</td>
@@ -46,18 +45,18 @@ document.addEventListener('DOMContentLoaded', function () {
                             <button class="btn btn-danger eliminar-orador-btn" data-id="${orador.id}">Eliminar</button>
                         </td>
                     `;
-                    tableBody.appendChild(row);
-                });
-            
-                // Asignar eventos a los botones de eliminar
-                const eliminarOradorBtns = document.querySelectorAll('.eliminar-orador-btn');
-                eliminarOradorBtns.forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const id = btn.getAttribute('data-id');
-                        eliminarOrador(id);
+                        tableBody.appendChild(row);
+                    });
+
+                    // Asignar eventos a los botones de eliminar
+                    const eliminarOradorBtns = document.querySelectorAll('.eliminar-orador-btn');
+                    eliminarOradorBtns.forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const id = btn.getAttribute('data-id');
+                            eliminarOrador(id);
+                        });
                     });
                 });
-            });
     }
 
     function obtenerCompras() {
@@ -66,34 +65,40 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const tableBody = document.getElementById('tableBodyCompras');
                 tableBody.innerHTML = '';
-
-                data.forEach(compra => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${compra.nombre}</td>
-                        <td>${compra.apellido}</td>
-                        <td>${compra.email}</td>
-                        <td>${compra.cantidadEntradas}</td>
-                        <td>${compra.categoria}</td>
-                        <td>${compra.total}</td>
-                        <td>
-                            <button class="btn btn-danger eliminar-compra-btn" data-id="${compra.id}">Eliminar</button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            
-                // Asignar eventos a los botones de eliminar
-                const eliminarCompraBtns = document.querySelectorAll('.eliminar-compra-btn');
-                eliminarCompraBtns.forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const id = btn.getAttribute('data-id');
-                        eliminarCompra(id);
+    
+                if (Array.isArray(data)) { // Verificar si data es un array
+                    data.forEach(compra => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${compra.nombre}</td>
+                            <td>${compra.apellido}</td>
+                            <td>${compra.email}</td>
+                            <td>${compra.cantidadEntradas}</td>
+                            <td>${compra.categoria}</td>
+                            <td>${compra.total}</td>
+                            <td>
+                                <button class="btn btn-danger eliminar-compra-btn" data-id="${compra.id}">Eliminar</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
                     });
-                });
+    
+                    // Asignar eventos a los botones de eliminar
+                    const eliminarCompraBtns = document.querySelectorAll('.eliminar-compra-btn');
+                    eliminarCompraBtns.forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const id = btn.getAttribute('data-id');
+                            eliminarCompra(id);
+                        });
+                    });
+                } else {
+                    console.error('La respuesta del servidor no es un array válido:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener las compras:', error);
             });
-        }
-
+    }
 
     function eliminarOrador(id) {
         fetch(`http://localhost:8080/api/oradores/${id}`, {
@@ -102,25 +107,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Content-Type': 'application/json',
             },
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al eliminar la compra');
-            }
-            Swal.fire({
-                title: 'Compra eliminada',
-                icon: 'success',
-                text: 'La compra se eliminó correctamente',
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar la compra');
+                }
+                Swal.fire({
+                    title: 'Compra eliminada',
+                    icon: 'success',
+                    text: 'La compra se eliminó correctamente',
+                });
+
+                obtenerOradores();
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    icon: 'error',
+                    text: error.message,
+                });
             });
-    
-            obtenerOradores();
-        })
-        .catch(error => {
-            Swal.fire({
-                title: 'Error',
-                icon: 'error',
-                text: error.message,
-            });
-        });    }
+    }
 
     function eliminarCompra(id) {
         fetch(`http://localhost:8080/api/compras/${id}`, {
@@ -129,25 +135,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Content-Type': 'application/json',
             },
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al eliminar la compra');
-            }
-            Swal.fire({
-                title: 'Compra eliminada',
-                icon: 'success',
-                text: 'La compra se eliminó correctamente',
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar la compra');
+                }
+                Swal.fire({
+                    title: 'Compra eliminada',
+                    icon: 'success',
+                    text: 'La compra se eliminó correctamente',
+                });
+
+                obtenerCompras();
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    icon: 'error',
+                    text: error.message,
+                });
             });
-    
-            obtenerCompras();
-        })
-        .catch(error => {
-            Swal.fire({
-                title: 'Error',
-                icon: 'error',
-                text: error.message,
-            });
-        });
     }
 
 
